@@ -14,10 +14,12 @@ def open_url(url):
     navigates to our starting point
     '''
     driver = webdriver.Chrome()
-    driver.get()
+    driver.get(url)
+
+    return driver
 
 
-def ditch_popup():
+def ditch_popup(driver):
     '''
     clicks out of an annoying modal that shouldn't be there in the first place
     '''
@@ -25,7 +27,7 @@ def ditch_popup():
     driver.find_element_by_css_selector('div.modal-footer > button').click()
 
 
-def get_text():
+def get_text(driver):
     '''
     pulls out the raw text that contains what we're interested in
     '''
@@ -54,22 +56,22 @@ def write_target_text_to_file(target_text):
     stashes our text in a file where a collaborator can clean it
     '''
     with open('messy_text.txt', 'a+') as f:
-        for line in f:
-            print >> f, messy_text
+        print >> f, target_text
 
 
-def do_the_damn_thang():
+def do_the_damn_thang(url):
     '''
     runs the functions to slurp up the data thingies
     '''
-    open_url(url)
-    ditch_popup()
-    text = get_text()
+    driver = open_url(url)
+    ditch_popup(driver)
+    text = get_text(driver)
     tree = parse_text(text)
     target_text = get_target_text(tree)
     write_target_text_to_file(target_text)
+    driver.close()
 
 
 if __name__ == '__main__':
     url = 'https://public-cpgh.epropertyplus.com/landmgmtpub/app/base/propertySearch?searchInfo=%7B%22criteria%22%3A%7B%22criterias%22%3A[]%7D%7D#'
-    do_the_damn_thang()
+    do_the_damn_thang(url)
