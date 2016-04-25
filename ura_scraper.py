@@ -9,6 +9,8 @@ import StringIO
 import time
 
 
+# TODO: a function to iterate (click) through to the rest of the data pages
+
 def open_url(url):
     '''
     navigates to our starting point
